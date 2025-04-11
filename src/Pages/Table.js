@@ -9,7 +9,8 @@ const CollectionMenu = ({ onSelectCollection }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    api.get("/api/collections")
+    api
+      .get("/api/collections")
       .then((response) => {
         const data = response.data;
         if (data.collections) {
@@ -73,7 +74,8 @@ const TableData = ({ collectionName }) => {
   useEffect(() => {
     if (!collectionName) return;
     setLoading(true);
-    api.get(`/api/collection?name=${collectionName}`)
+    api
+      .get(`/api/collection?name=${collectionName}`)
       .then((response) => {
         const data = response.data;
         if (data && data.data) {
@@ -120,13 +122,25 @@ const TableData = ({ collectionName }) => {
               <tr key={index}>
                 {tableHeaders.map((header, idx) => (
                   <td key={idx}>
-                    {item[header] ||
-                      (item.customFields &&
-                        item.customFields.find(
-                          (field) =>
-                            field.name.toLowerCase() === header
-                        )?.value) ||
-                      "N/A"}
+                    {(() => {
+                      let cellValue =
+                        item[header] ||
+                        (item.customFields &&
+                          item.customFields.find(
+                            (field) =>
+                              field.name.toLowerCase() === header
+                          )?.value) ||
+                        "N/A";
+                      // If the cellValue is an object, convert it to a string
+                      if (
+                        typeof cellValue === "object" &&
+                        cellValue !== null
+                      ) {
+                        // Optionally extract a nested property if needed, e.g., cellValue.value
+                        cellValue = JSON.stringify(cellValue);
+                      }
+                      return cellValue;
+                    })()}
                   </td>
                 ))}
               </tr>

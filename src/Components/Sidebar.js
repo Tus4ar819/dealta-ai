@@ -22,7 +22,7 @@ const Sidebar = () => {
   return (
     <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
       <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-        <Menu.Item key="1" icon={<DashboardOutlined />} onClick={() => handleMenuClick('/')}>
+        <Menu.Item key="1" icon={<DashboardOutlined />} onClick={() => handleMenuClick('/dashboard')}>
           Dashboard
         </Menu.Item>
         <Menu.Item key="2" icon={<TableOutlined />} onClick={() => handleMenuClick('/table')}>

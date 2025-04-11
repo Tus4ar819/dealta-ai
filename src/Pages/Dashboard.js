@@ -12,7 +12,7 @@ const Dashboard = () => {
 
     // Create the dashboard instance using your dashboard ID
     const dashboard = sdk.createDashboard({
-      dashboardId: '27b3085f-76fc-48ed-b0e9-cee5d0b40ac1', // Replace with your actual dashboard ID
+      dashboardId: '27c91e2b-024c-4fbb-b519-df51b8a78bd0', // Replace with your actual dashboard ID
       height: '800px',
       width: '100%',
       theme: 'light',
