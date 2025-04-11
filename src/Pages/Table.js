@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import api from "../api"; // Adjust the import path as needed
 
 // CollectionMenu component fetches collection names and renders a dropdown menu
 const CollectionMenu = ({ onSelectCollection }) => {
@@ -8,9 +9,9 @@ const CollectionMenu = ({ onSelectCollection }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/collections")
-      .then((response) => response.json())
-      .then((data) => {
+    api.get("/api/collections")
+      .then((response) => {
+        const data = response.data;
         if (data.collections) {
           setCollections(data.collections);
           toast.success("Collections fetched successfully!");
@@ -32,7 +33,10 @@ const CollectionMenu = ({ onSelectCollection }) => {
   return (
     <div className="my-3">
       <label htmlFor="collection-select">Select a Collection: </label>
-      <select id="collection-select" onChange={(e) => onSelectCollection(e.target.value)}>
+      <select
+        id="collection-select"
+        onChange={(e) => onSelectCollection(e.target.value)}
+      >
         <option value="">--Select--</option>
         {collections.map((col, index) => (
           <option key={index} value={col}>
@@ -69,9 +73,9 @@ const TableData = ({ collectionName }) => {
   useEffect(() => {
     if (!collectionName) return;
     setLoading(true);
-    fetch(`http://localhost:5000/api/collection?name=${collectionName}`)
-      .then((response) => response.json())
-      .then((data) => {
+    api.get(`/api/collection?name=${collectionName}`)
+      .then((response) => {
+        const data = response.data;
         if (data && data.data) {
           setTableData(data.data);
           const headers = extractHeaders(data.data);
@@ -98,7 +102,9 @@ const TableData = ({ collectionName }) => {
   return (
     <div className="container mt-4">
       <h3 className="text-center">
-        {collectionName && collectionName.charAt(0).toUpperCase() + collectionName.slice(1)} Data
+        {collectionName &&
+          collectionName.charAt(0).toUpperCase() + collectionName.slice(1)}{" "}
+        Data
       </h3>
       <table className="table table-bordered">
         <thead className="table-dark">
@@ -115,7 +121,11 @@ const TableData = ({ collectionName }) => {
                 {tableHeaders.map((header, idx) => (
                   <td key={idx}>
                     {item[header] ||
-                      (item.customFields && item.customFields.find((field) => field.name.toLowerCase() === header)?.value) ||
+                      (item.customFields &&
+                        item.customFields.find(
+                          (field) =>
+                            field.name.toLowerCase() === header
+                        )?.value) ||
                       "N/A"}
                   </td>
                 ))}

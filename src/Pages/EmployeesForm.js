@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import api from "../api"; // Adjust the import path based on your project structure
 
 const EmployeeForm = () => {
   // Define initial form state including all fields
@@ -41,7 +42,7 @@ const EmployeeForm = () => {
     setCustomFields([...customFields, { name: "", value: "" }]);
   };
 
-  // Submit form data to backend API
+  // Submit form data to backend API using Axios
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -49,15 +50,11 @@ const EmployeeForm = () => {
     const finalData = { ...employeeData, customFields };
 
     try {
-      const response = await fetch("http://localhost:5000/save-employee", {
-        method: "POST",
+      const response = await api.post("/save-employee", finalData, {
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(finalData),
       });
 
-      if (response.ok) {
-        // Optionally, get response data from the backend
-        const data = await response.json();
+      if (response.status === 200 || response.status === 201) {
         toast.success("Employee and feedback saved successfully! 🎉");
         // Clear the form by resetting state
         setEmployeeData(initialState);

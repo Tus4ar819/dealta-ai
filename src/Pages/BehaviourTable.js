@@ -1,31 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import api from "../api"; // Adjust the path as needed based on your project structure
 
 const EmployeeTable = () => {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [tableHeaders, setTableHeaders] = useState(["name","behavior"]); // Default headers
+  const [tableHeaders, setTableHeaders] = useState(["name", "behavior"]); // Default headers
 
   useEffect(() => {
-    fetch("http://localhost:5000/get-employees")
-      .then((response) => response.json())
-      .then((data) => {
+    // Using the axios instance to get employee data.
+    api.get("/get-employees")
+      .then((response) => {
+        const data = response.data;
         setEmployees(data);
         setLoading(false);
         toast.success("Employee data fetched successfully!");
 
-        // Dynamically extract custom field names
+        // Dynamically extract custom field names from each employee record.
         const allCustomFields = new Set(tableHeaders);
         data.forEach((employee) => {
           if (employee.customFields) {
             employee.customFields.forEach((field) => {
-              allCustomFields.add(field.name.toLowerCase()); // ✅ Ensure lowercase consistency
+              // Ensure lowercase consistency
+              allCustomFields.add(field.name.toLowerCase());
             });
           }
         });
 
-        setTableHeaders(Array.from(allCustomFields)); // ✅ Update table headers dynamically
+        setTableHeaders(Array.from(allCustomFields)); // Update table headers dynamically
       })
       .catch((err) => {
         setError("Failed to fetch data!");
@@ -34,7 +37,7 @@ const EmployeeTable = () => {
       });
   }, []);
 
-  // ✅ Function to capitalize first letter of headers
+  // Function to capitalize the first letter of headers for display.
   const formatHeader = (header) => {
     return header.charAt(0).toUpperCase() + header.slice(1);
   };
@@ -49,7 +52,7 @@ const EmployeeTable = () => {
         <thead className="table-dark">
           <tr>
             {tableHeaders.map((header, index) => (
-              <th key={index}>{formatHeader(header)}</th> //{/* ✅ Convert first letter to uppercase */}
+              <th key={index}>{formatHeader(header)}</th>
             ))}
           </tr>
         </thead>
@@ -61,7 +64,9 @@ const EmployeeTable = () => {
                   <td key={idx}>
                     {header in employee
                       ? employee[header]
-                      : employee.customFields?.find((field) => field.name.toLowerCase() === header)?.value || "N/A"}
+                      : employee.customFields?.find(
+                          (field) => field.name.toLowerCase() === header
+                        )?.value || "N/A"}
                   </td>
                 ))}
               </tr>
