@@ -108,55 +108,58 @@ const TableData = ({ collectionName }) => {
           collectionName.charAt(0).toUpperCase() + collectionName.slice(1)}{" "}
         Data
       </h3>
-      <table className="table table-bordered">
-        <thead className="table-dark">
-          <tr>
-            {tableHeaders.map((header, index) => (
-              <th key={index}>{formatHeader(header)}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {tableData.length > 0 ? (
-            tableData.map((item, index) => (
-              <tr key={index}>
-                {tableHeaders.map((header, idx) => (
-                  <td key={idx}>
-                    {(() => {
-                      let cellValue =
-                        item[header] ||
-                        (item.customFields &&
-                          item.customFields.find(
-                            (field) =>
-                              field.name.toLowerCase() === header
-                          )?.value) ||
-                        "N/A";
-                      // If the cellValue is an object, convert it to a string
-                      if (
-                        typeof cellValue === "object" &&
-                        cellValue !== null
-                      ) {
-                        // Optionally extract a nested property if needed, e.g., cellValue.value
-                        cellValue = JSON.stringify(cellValue);
-                      }
-                      return cellValue;
-                    })()}
-                  </td>
-                ))}
-              </tr>
-            ))
-          ) : (
+      {/* Wrap the table in a responsive container */}
+      <div className="table-responsive">
+        <table className="table table-bordered">
+          <thead className="table-dark">
             <tr>
-              <td colSpan={tableHeaders.length} className="text-center">
-                No data found!
-              </td>
+              {tableHeaders.map((header, index) => (
+                <th key={index}>{formatHeader(header)}</th>
+              ))}
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {tableData.length > 0 ? (
+              tableData.map((item, index) => (
+                <tr key={index}>
+                  {tableHeaders.map((header, idx) => (
+                    <td key={idx}>
+                      {(() => {
+                        let cellValue =
+                          item[header] ||
+                          (item.customFields &&
+                            item.customFields.find(
+                              (field) =>
+                                field.name.toLowerCase() === header
+                            )?.value) ||
+                          "N/A";
+                        // If the cellValue is an object, convert it to a string
+                        if (
+                          typeof cellValue === "object" &&
+                          cellValue !== null
+                        ) {
+                          cellValue = JSON.stringify(cellValue);
+                        }
+                        return cellValue;
+                      })()}
+                    </td>
+                  ))}
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={tableHeaders.length} className="text-center">
+                  No data found!
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
+
 
 // Main component that combines CollectionMenu and TableData
 const DynamicCollectionViewer = () => {
