@@ -9,23 +9,21 @@ import api from '../api';
 
 export default function UploadExcel() {
     const [file, setFile] = useState(null);
-    const [tableName, setTableName] = useState("");
     const [uploadMessage, setUploadMessage] = useState("");
 
     const handleFileChange = (e) => setFile(e.target.files[0]);
-    const handleTableNameChange = (e) => setTableName(e.target.value);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!file || !tableName) {
-            toast.error("Please provide both a file and table name.");
-            setUploadMessage("Please provide both a file and table name.");
+        if (!file) {
+            toast.error("Please provide a file.");
+            setUploadMessage("Please provide a file.");
             return;
         }
 
         const formData = new FormData();
         formData.append("file", file);
-        formData.append("table_name", tableName);  // Note: key should match backend expectation "table_name"
+        formData.append("table_name", "ing");
 
         try {
             const response = await api.post("/api/upload", formData);
@@ -50,13 +48,6 @@ export default function UploadExcel() {
                 <h1 className="text-xl font-bold mb-4">Upload Excel File</h1>
                 <form onSubmit={handleSubmit}>
                     <Input type="file" accept=".xlsx" onChange={handleFileChange} className="mb-2" />
-                    <Input 
-                        type="text" 
-                        placeholder="Enter table name" 
-                        value={tableName} 
-                        onChange={handleTableNameChange} 
-                        className="mb-2"
-                    />
                     <Button type="submit">Upload</Button>
                 </form>
                 {uploadMessage && (

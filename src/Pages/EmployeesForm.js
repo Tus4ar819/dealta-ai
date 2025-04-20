@@ -13,6 +13,7 @@ const EmployeeForm = () => {
     doj: "",
     salary: "",
     feedback: "",
+    gender: "", // Added gender field
   };
 
   const [employeeData, setEmployeeData] = useState(initialState);
@@ -84,6 +85,23 @@ const EmployeeForm = () => {
             onChange={handleChange}
             required
           />
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Gender</label>
+          <select
+            name="gender"
+            className="form-control"
+            value={employeeData.gender}
+            onChange={handleChange}
+            required
+          >
+            <option value="" disabled>
+              Select Gender
+            </option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
         </div>
         <div className="mb-3">
           <label className="form-label">Date of Birth</label>
