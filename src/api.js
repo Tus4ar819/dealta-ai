@@ -3,7 +3,7 @@ import axios from 'axios';
 // Create an axios instance with the base URL from an environment variable,
 // falling back to your default if not set.
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'https://ideal-waddle-jj95jpxp5x7xhqp77-5000.app.github.dev/',
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000',
 });
 
 // Request interceptor to modify the request config if needed
